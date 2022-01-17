@@ -19,8 +19,8 @@ public class Main {
                 .buildSessionFactory();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        LocationRepository locationRepository = new LocationRepository(sessionFactory);
-        LocationService locationService = new LocationService(locationRepository);
+        LocationRepositoryImpl locationRepositoryImpl = new LocationRepositoryImpl(sessionFactory);
+        LocationService locationService = new LocationService(locationRepositoryImpl);
         LocationController locationController = new LocationController(objectMapper, locationService);
 
         UserInterface userInterface = new UserInterface(locationController);

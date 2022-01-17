@@ -13,7 +13,7 @@ public class LocationController {
 
     public String createLocation(String inputData) {
         try {
-            Location location = objectMapper.readValue(inputData,Location.class);
+            Location location = objectMapper.readValue(inputData, Location.class);
             Location targetLocation = locationService
                     .createLocation(
                             location.getCityName(),

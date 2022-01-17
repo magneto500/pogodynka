@@ -59,7 +59,7 @@ public class UserInterface {
         String countryName = scanner.nextLine();
         System.out.println("Jeśli chcesz wpisz region, jeśli nie wciśnij enter: ");
         String region = scanner.nextLine();
-        String requestBody = String.format("{\"cityName\":\"%s\",\"latitude\":\"%s\",\"longitude\":\"%s\",\"countryName\":\"%s\",\"region\":\"%s\"}", cityName, latitude,longitude,countryName, region);
+        String requestBody = String.format("{\"cityName\":\"%s\",\"latitude\":\"%s\",\"longitude\":\"%s\",\"countryName\":\"%s\",\"region\":\"%s\"}", cityName, latitude, longitude, countryName, region);
         String responseBody = locationController.createLocation(requestBody);
         System.out.println("Odpowiedź serwera: " + responseBody);
     }

@@ -1,6 +1,5 @@
 package com.sda.weather.location;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -8,8 +7,8 @@ public class LocationService {
 
     private final LocationRepository locationRepository;
 
-    Location createLocation(String cityName, double latitude, double longitude, String countryName, String region){
-        validateLocation(cityName,latitude,longitude,countryName);
+    Location createLocation(String cityName, double latitude, double longitude, String countryName, String region) {
+        validateLocation(cityName, latitude, longitude, countryName);
         Location location = new Location();
         location.setCityName(cityName);
         location.setLatitude(latitude);
@@ -19,7 +18,7 @@ public class LocationService {
         return locationRepository.save(location);
     }
 
-    void validateLocation(String cityName, double latitude, double longitude, String countryName){
+    void validateLocation(String cityName, double latitude, double longitude, String countryName) {
         if (cityName == null || cityName.isBlank() || latitude < -90.0d || latitude > 90.0d || longitude < -180.0d || longitude > 180.0d || countryName == null || countryName.isBlank()) {
             throw new IllegalArgumentException("Niepoprawne dane!");
         }
