@@ -13,19 +13,18 @@ public class LocationController {
 
     public String createLocation(String inputData) {
         try {
-            Location location = objectMapper.readValue(inputData, Location.class);
-            Location targetLocation = locationService
-                    .createLocation(
-                            location.getCityName(),
-                            location.getLatitude(),
-                            location.getLongitude(),
-                            location.getCountryName(),
-                            location.getRegion());
-            return objectMapper.writeValueAsString(targetLocation);
+            Location location = objectMapper.readValue(inputData, Location.class); // todo create and use LocationDTO
+            Location targetLocation = locationService.createLocation(
+                    location.getCityName(),
+                    location.getLatitude(),
+                    location.getLongitude(),
+                    location.getCountryName(),
+                    location.getRegion());
+            return objectMapper.writeValueAsString(targetLocation); // todo LocationDTO
         } catch (IllegalArgumentException e) {
-            return String.format("{\"message\": \"%s\" Spróbuj ponownie!}\n", e.getMessage());
+            return String.format("{\"message\": \"%s Spróbuj ponownie!\"}", e.getMessage()); // todo JSON format {"key": "value"}
         } catch (JsonProcessingException e) {
-            return String.format("{\"message\": \"%s\" Spróbuj ponownie!}\n", e.getMessage());
+            return String.format("{\"message\": \"%s\" Spróbuj ponownie!}\n", e.getMessage()); // todo compare with a proper JSON (this above)
         }
     }
 }
