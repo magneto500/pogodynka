@@ -1,6 +1,5 @@
 package com.sda.weather.location;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,16 +12,15 @@ public class LocationServiceTest {
 
     @BeforeEach
     void setUp() {
-        ObjectMapper objectMapper = new ObjectMapper(); // todo unnecessary object
         LocationRepositoryMock locationRepository = new LocationRepositoryMock();
         locationService = new LocationService(locationRepository);
     }
 
     @Test
     void createLocation_whenAllArgsAreProper_createsNewLocation() {
-        // when // todo add this to other tests
+        // when
         Location location = locationService.createLocation("Gdańsk", 20.0, 30.0, "Polska", "Pomorskie");
-        // then // todo add this to other tests
+        // then
         assertThat(location.getCityName()).isEqualTo("Gdańsk");
         assertThat(location.getLatitude()).isEqualTo(20.0);
         assertThat(location.getLongitude()).isEqualTo(30.0);
@@ -32,9 +30,9 @@ public class LocationServiceTest {
 
     @Test
     void createLocation_whenNameIsEmpty_throwsAnException() {
-
+        // when
         Throwable throwable = catchThrowable(() -> locationService.createLocation("", 20.0, 30.0, "Polska", "Pomorskie"));
-
+        // then
         assertThat(throwable).isExactlyInstanceOf(IllegalArgumentException.class);
     }
 
@@ -46,26 +44,108 @@ public class LocationServiceTest {
         assertThat(throwable).isExactlyInstanceOf(IllegalArgumentException.class);
     }
 
-    // todo test latitude = 90,91,-90,-91
-    // todo test longitude = 180,181,-180,-181
     @Test
-    void createLocation_whenLatitudeIsWrong_throwsAnException() {
+    void createLocation_whenLatitudeIs90_createsNewLocation() {
+        // when
+        Location location = locationService.createLocation("Gdańsk", 90.0, 30.0, "Polska", "Pomorskie");
+        // then
+        assertThat(location.getCityName()).isEqualTo("Gdańsk");
+        assertThat(location.getLatitude()).isEqualTo(90.0);
+        assertThat(location.getLongitude()).isEqualTo(30.0);
+        assertThat(location.getCountryName()).isEqualTo("Polska");
+        assertThat(location.getRegion()).isEqualTo("Pomorskie");
+    }
 
-        Throwable throwable = catchThrowable(() -> locationService.createLocation("Gdańsk", 120.0, 30.0, "Polska", "Pomorskie"));
+    @Test
+    void createLocation_whenLatitudeIsMinus90_createsNewLocation() {
+        // when
+        Location location = locationService.createLocation("Gdańsk", -90.0, 30.0, "Polska", "Pomorskie");
+        // then
+        assertThat(location.getCityName()).isEqualTo("Gdańsk");
+        assertThat(location.getLatitude()).isEqualTo(-90.0);
+        assertThat(location.getLongitude()).isEqualTo(30.0);
+        assertThat(location.getCountryName()).isEqualTo("Polska");
+        assertThat(location.getRegion()).isEqualTo("Pomorskie");
+    }
 
+    @Test
+    void createLocation_whenLatitudeIs91_throwsAnException() {
+        // when
+        Throwable throwable = catchThrowable(() -> locationService.createLocation("Gdańsk", 91.0, 30.0, "Polska", "Pomorskie"));
+        // then
+        assertThat(throwable).isExactlyInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void createLocation_whenLatitudeIsMinus91_throwsAnException() {
+        // when
+        Throwable throwable = catchThrowable(() -> locationService.createLocation("Gdańsk", -91.0, 30.0, "Polska", "Pomorskie"));
+        // then
+        assertThat(throwable).isExactlyInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void createLocation_whenLongitudeIs180_createsNewLocation() {
+        // when
+        Location location = locationService.createLocation("Gdańsk", 20.0, 180.0, "Polska", "Pomorskie");
+        // then
+        assertThat(location.getCityName()).isEqualTo("Gdańsk");
+        assertThat(location.getLatitude()).isEqualTo(20.0);
+        assertThat(location.getLongitude()).isEqualTo(180.0);
+        assertThat(location.getCountryName()).isEqualTo("Polska");
+        assertThat(location.getRegion()).isEqualTo("Pomorskie");
+    }
+
+    @Test
+    void createLocation_whenLongitudeIsMinus180_createsNewLocation() {
+        // when
+        Location location = locationService.createLocation("Gdańsk", 20.0, -180.0, "Polska", "Pomorskie");
+        // then
+        assertThat(location.getCityName()).isEqualTo("Gdańsk");
+        assertThat(location.getLatitude()).isEqualTo(20.0);
+        assertThat(location.getLongitude()).isEqualTo(-180.0);
+        assertThat(location.getCountryName()).isEqualTo("Polska");
+        assertThat(location.getRegion()).isEqualTo("Pomorskie");
+    }
+
+    @Test
+    void createLocation_whenLongitudeIs181_throwsAnException() {
+        // when
+        Throwable throwable = catchThrowable(() -> locationService.createLocation("Gdańsk", 20.0, 181.0, "Polska", "Pomorskie"));
+        // then
+        assertThat(throwable).isExactlyInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void createLocation_whenLongitudeIsMinus181_throwsAnException() {
+        // when
+        Throwable throwable = catchThrowable(() -> locationService.createLocation("Gdańsk", 20.0, -181.0, "Polska", "Pomorskie"));
+        // then
         assertThat(throwable).isExactlyInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void createLocation_whenRegionIsEmpty_createsNewLocation() {
-
+        // when
         Location location = locationService.createLocation("Gdańsk", 20.0, 30.0, "Polska", "");
-
+        // then
         assertThat(location.getCityName()).isEqualTo("Gdańsk");
         assertThat(location.getLatitude()).isEqualTo(20.0);
         assertThat(location.getLongitude()).isEqualTo(30.0);
         assertThat(location.getCountryName()).isEqualTo("Polska");
-        assertThat(location.getRegion()).isEqualTo(""); // todo null
+        assertThat(location.getRegion()).isNull();
+    }
+
+    @Test
+    void createLocation_whenRegionIsNull_createsNewLocation() {
+        // when
+        Location location = locationService.createLocation("Gdańsk", 20.0, 30.0, "Polska", null);
+        // then
+        assertThat(location.getCityName()).isEqualTo("Gdańsk");
+        assertThat(location.getLatitude()).isEqualTo(20.0);
+        assertThat(location.getLongitude()).isEqualTo(30.0);
+        assertThat(location.getCountryName()).isEqualTo("Polska");
+        assertThat(location.getRegion()).isNull();
     }
 
     @Test
@@ -77,15 +157,8 @@ public class LocationServiceTest {
         assertThat(location.getLatitude()).isEqualTo(20.0);
         assertThat(location.getLongitude()).isEqualTo(30.0);
         assertThat(location.getCountryName()).isEqualTo("Polska");
-        assertThat(location.getRegion()).isNull();
+        assertThat(location.getRegion()).isBlank();
     }
 
-    // todo unnecessary test
-    @Test
-    void createLocation_whenRegionIsEmpty_throwableIsNull() {
 
-        Throwable throwable = catchThrowable(() -> locationService.createLocation("Gdańsk", 20.0, 30.0, "Polska", ""));
-
-        assertThat(throwable).isNull();
-    }
 }

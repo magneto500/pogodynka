@@ -13,18 +13,30 @@ public class LocationController {
 
     public String createLocation(String inputData) {
         try {
-            Location location = objectMapper.readValue(inputData, Location.class); // todo create and use LocationDTO
-            Location targetLocation = locationService.createLocation(
-                    location.getCityName(),
-                    location.getLatitude(),
-                    location.getLongitude(),
-                    location.getCountryName(),
-                    location.getRegion());
-            return objectMapper.writeValueAsString(targetLocation); // todo LocationDTO
+            LocationDTO locationDTOFromMapper = objectMapper.readValue(inputData, LocationDTO.class);
+            Location location = locationService.createLocation(
+                    locationDTOFromMapper.getCityName(),
+                    locationDTOFromMapper.getLatitude(),
+                    locationDTOFromMapper.getLongitude(),
+                    locationDTOFromMapper.getCountryName(),
+                    locationDTOFromMapper.getRegion());
+            LocationDTO locationDTO = mapLocationToLocationDTO(location);
+            return objectMapper.writeValueAsString(locationDTO);
         } catch (IllegalArgumentException e) {
-            return String.format("{\"message\": \"%s Spróbuj ponownie!\"}", e.getMessage()); // todo JSON format {"key": "value"}
+            return String.format("{\"message\": \"%s\"}", e.getMessage());
         } catch (JsonProcessingException e) {
-            return String.format("{\"message\": \"%s\" Spróbuj ponownie!}\n", e.getMessage()); // todo compare with a proper JSON (this above)
+            return String.format("{\"message\": \"%s\"}", e.getMessage());
         }
+    }
+
+    private LocationDTO mapLocationToLocationDTO(Location newLocation) {
+        LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setId(newLocation.getId());
+        locationDTO.setCityName(newLocation.getCityName());
+        locationDTO.setLatitude(newLocation.getLatitude());
+        locationDTO.setLongitude(newLocation.getLongitude());
+        locationDTO.setCountryName(newLocation.getCountryName());
+        locationDTO.setRegion(newLocation.getRegion());
+        return locationDTO;
     }
 }
