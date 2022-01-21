@@ -43,7 +43,8 @@ public class UserInterface {
     }
 
     private void getAllLocalizations() {
-        System.out.println("Wyśtwietlanie lokalizacji - praca nad utworzeniem funkjonalnośći trwa!");
+        String locations = locationController.getAllLocations();
+        System.out.println("Odpowiedź serwera: " + locations);
     }
 
     private void addLocalization() {

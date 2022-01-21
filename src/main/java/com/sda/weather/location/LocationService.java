@@ -2,6 +2,8 @@ package com.sda.weather.location;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class LocationService {
 
@@ -19,6 +21,12 @@ public class LocationService {
         }
         return locationRepository.save(location);
     }
+
+    List<Location> getAllLocations() {
+        List<Location> locations = locationRepository.findAll();
+        return locations;
+    }
+
 
     private void validation(String cityName, double latitude, double longitude, String countryName) {
         if (cityName == null ) {

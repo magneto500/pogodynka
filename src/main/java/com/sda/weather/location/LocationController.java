@@ -5,6 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 public class LocationController {
 
@@ -24,6 +27,18 @@ public class LocationController {
             return objectMapper.writeValueAsString(locationDTO);
         } catch (IllegalArgumentException e) {
             return String.format("{\"message\": \"%s\"}", e.getMessage());
+        } catch (JsonProcessingException e) {
+            return String.format("{\"message\": \"%s\"}", e.getMessage());
+        }
+    }
+
+    public String getAllLocations() {
+        try {
+            List<Location> allLocations = locationService.getAllLocations();
+            List<LocationDTO> allLocationsDTO = allLocations.stream()
+                    .map(loc -> mapLocationToLocationDTO(loc))
+                    .collect(Collectors.toList());
+            return objectMapper.writeValueAsString(allLocationsDTO);
         } catch (JsonProcessingException e) {
             return String.format("{\"message\": \"%s\"}", e.getMessage());
         }
